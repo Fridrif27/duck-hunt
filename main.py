@@ -19,7 +19,8 @@ class DuckHuntGame:
         self.WIDTH = width
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([self.WIDTH, self.HEIGHT])
-
+        target_coordinates = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
+        self.targets = [Target(x, y) for x, y in target_coordinates]
      
     def run_game(self):
         run = True
@@ -28,6 +29,8 @@ class DuckHuntGame:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+            for target in self.targets:
+                pygame.draw.circle(self.screen, (255, 0, 0), (target.x, target.y), 20)
 
             pygame.display.flip()
 
