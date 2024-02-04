@@ -1,0 +1,4 @@
+pylint==3.0.3
+Flake8==7.0.0
+pytest==8.0.0
+pygame==2.5.2
