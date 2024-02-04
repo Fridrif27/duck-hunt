@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import pygame
+import math
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+class Target:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+        
+class DuckHuntGame:
+    def __init__(self, width, height):
+        pygame.init()
 
+        self.fps = 60
+        self.timer = pygame.time.Clock()
+        self.WIDTH = width
+        self.HEIGHT = height
+        self.screen = pygame.display.set_mode([self.WIDTH, self.HEIGHT])
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+     
+    def run_game(self):
+        run = True
+        while run:
+            self.timer.tick(self.fps)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
 
+            pygame.display.flip()
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+        pygame.quit()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    game = DuckHuntGame(900, 800)
+    game.run_game()
