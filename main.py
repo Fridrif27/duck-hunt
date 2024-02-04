@@ -5,6 +5,7 @@ class Target:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.radius = 20
         
     def move(self, dx, dy):
         self.x += dx
@@ -29,8 +30,17 @@ class DuckHuntGame:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    for target in self.targets:
+                        if (
+                            target.x - target.radius <= mouse_x <= target.x + target.radius and
+                            target.y - target.radius <= mouse_y <= target.y + target.radius
+                        ):
+                            self.targets.remove(target)
+            self.screen.fill((0, 0, 0))
             for target in self.targets:
-                pygame.draw.circle(self.screen, (255, 0, 0), (target.x, target.y), 20)
+                pygame.draw.circle(self.screen, (255, 0, 0), (target.x, target.y), target.radius)
 
             pygame.display.flip()
 
