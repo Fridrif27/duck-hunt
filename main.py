@@ -2,15 +2,18 @@ import pygame
 import math
 
 class Target:
-    def __init__(self, x, y, speed):
+    def __init__(self, x, y, speed, width):
         self.x = x
         self.y = y
         self.radius = 20
         self.speed = speed
-        
+        self.width = width
     def move(self, dx):
         self.x += dx
-        
+        if self.x - self.radius > self.width:
+            self.x = -self.radius
+        elif self.x + self.radius < 0:
+            self.x = self.radius +self.width
 class DuckHuntGame:
     def __init__(self, width, height):
         pygame.init()
@@ -21,7 +24,7 @@ class DuckHuntGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([self.WIDTH, self.HEIGHT])
         target_coordinates_and_speed = [((100, 200), -1), ((300, 400), 1), ((500, 100), -2), ((700, 300), 1), ((800, 600), -3)]
-        self.targets = [Target(x, y, speed) for (x, y), speed in target_coordinates_and_speed]
+        self.targets = [Target(x, y, speed, self.WIDTH) for (x, y), speed in target_coordinates_and_speed]
         self.background_image = pygame.transform.scale(pygame.image.load("bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
     def run_game(self):
