@@ -35,7 +35,7 @@ class DuckHuntGame:
         ]
         for target in self.targets:
             target.width = self.WIDTH
-        self.background_image = pygame.transform.scale(pygame.image.load("bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
+        self.background_image = pygame.transform.scale(pygame.image.load("bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
     def run_game(self):
         run = True
