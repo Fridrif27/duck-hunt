@@ -28,7 +28,7 @@ class DuckHuntGame:
         self.timer = pygame.time.Clock()
         self.WIDTH = width
         self.HEIGHT = height
-        self.screen = pygame.display.set_mode([self.WIDTH, self.HEIGHT])
+        self.screen = pygame.display.set_mode([width, height])
         self.bird_images = [
             pygame.transform.scale(pygame.image.load("targets/bird1.jpg").convert(), (40, 40)),
             pygame.transform.scale(pygame.image.load("targets/bird2.jpg").convert(), (40, 40)),
@@ -42,9 +42,14 @@ class DuckHuntGame:
             Target(700, 300, 20, -1.5, 10, 0.015, self.bird_images),
             Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images)
         ]
+        self.sound_shot = pygame.mixer.Sound("sounds/shot.mp3")
+        self.sound_bird1 = pygame.mixer.Sound("sounds/bird1.mp3")
+        self.sound_bird2 = pygame.mixer.Sound("sounds/bird2.mp3")
+        self.sound_bird3 = pygame.mixer.Sound("sounds/bird3.mp3") 
+        self.sound_bird4 = pygame.mixer.Sound("sounds/bird4.mp3") 
         for target in self.targets:
             target.width = self.WIDTH
-        self.background_image = pygame.transform.scale(pygame.image.load("bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
+        self.background_image = pygame.transform.scale(pygame.image.load("bgs/bgs1.png").convert(), (width, height))
     def run_game(self):
         run = True
         while run:
@@ -54,12 +59,21 @@ class DuckHuntGame:
                     run = False
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
+                    self.sound_shot.play()
                     for target in self.targets:
                         if (
                             target.x - target.radius <= mouse_x <= target.x + target.radius and
                             target.y - target.radius <= mouse_y <= target.y + target.radius
                         ):
                             self.targets.remove(target)
+                            if target.current_bird_image == self.bird_images[0]:
+                                self.sound_bird1.play()
+                            elif target.current_bird_image == self.bird_images[1]:
+                                self.sound_bird2.play()
+                            elif target.current_bird_image == self.bird_images[2]:
+                                self.sound_bird3.play()
+                            elif target.current_bird_image == self.bird_images[3]:
+                                self.sound_bird4.play()
             self.screen.blit(self.background_image, (0, 0))
             for target in self.targets:
                 target.move()
