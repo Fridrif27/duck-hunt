@@ -43,6 +43,7 @@ class DuckHuntGame:
             Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images)
         ]
         self.sound_shot = pygame.mixer.Sound("sounds/shot.mp3")
+        self.sound_shot.set_volume(0.08)
         self.sound_bird1 = pygame.mixer.Sound("sounds/bird1.mp3")
         self.sound_bird2 = pygame.mixer.Sound("sounds/bird2.mp3")
         self.sound_bird3 = pygame.mixer.Sound("sounds/bird3.mp3") 
