@@ -43,7 +43,7 @@ class DuckHuntGame:
         self.screen = pygame.display.set_mode([width, height])
         self.current_level = 0
         self.levels = [
-            Level(bird_speed=1, amplitude_y=100, frequency_y=0.02),
+            Level(bird_speed=1, amplitude_y=0, frequency_y=0),
             Level(bird_speed=1.5, amplitude_y=150, frequency_y=0.03),
             Level(bird_speed=2, amplitude_y=200, frequency_y=0.04)
         ]
@@ -75,12 +75,13 @@ class DuckHuntGame:
         self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.PNG").convert(), (self.WIDTH, self.HEIGHT))
 
     def initialize_targets(self):
+        level = self.levels[self.current_level]
         self.targets = [
-            Target(100, 200, 20, 1, 0, 0, self.bird_images, self.WIDTH),
-            Target(300, 400, 20, -1, 0, 0, self.bird_images, self.WIDTH),
-            Target(500, 100, 20, 2, 0, 0, self.bird_images, self.WIDTH),
-            Target(700, 300, 20, -1.5, 0, 0, self.bird_images, self.WIDTH),
-            Target(800, 600, 20, 1.5, 0, 0, self.bird_images, self.WIDTH)
+            Target(100, 200, 20, 1, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
+            Target(300, 400, 20, -1, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
+            Target(500, 100, 20, 2, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
+           Target(700, 300, 20, -1.5, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
+            Target(800, 600, 20, 1.5, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH)
         ]
 
     def run_game(self):
@@ -137,6 +138,7 @@ class DuckHuntGame:
                 return True
             else:
                 print("Congratulations! You have completed all levels.")
+                pygame.time.delay(1000)
                 return False
         return True
 
