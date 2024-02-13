@@ -2,6 +2,12 @@ import pygame
 import math
 import random
 
+class Level:
+    def __init__(self, bird_speed, amplitude_y, frequency_y):
+        self.bird_speed = bird_speed
+        self.amplitude_y = amplitude_y
+        self.frequency_y = frequency_y
+
 class Target:
     def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images):
         self.x = x
@@ -23,7 +29,6 @@ class Target:
 class DuckHuntGame:
     def __init__(self, width, height):
         pygame.init()
-
         self.fps = 60
         self.timer = pygame.time.Clock()
         self.WIDTH = width
@@ -42,6 +47,13 @@ class DuckHuntGame:
             Target(700, 300, 20, -1.5, 10, 0.015, self.bird_images),
             Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images)
         ]
+        self.levels = [
+            Level(bird_speed=1, amplitude_y=10, frequency_y=0.4),
+            Level(bird_speed=1.5, amplitude_y=150, frequency_y=0.03),
+            Level(bird_speed=1.5, amplitude_y=150, frequency_y=0.03),
+        ]
+        self.current_level = 0
+        self.current_level_info = self.levels[self.current_level]
         self.sound_shot = pygame.mixer.Sound("sounds/shot.mp3")
         self.sound_shot.set_volume(0.08)
         self.sound_bird1 = pygame.mixer.Sound("sounds/bird1.mp3")
@@ -80,7 +92,21 @@ class DuckHuntGame:
                 target.move()
                 self.screen.blit(target.current_bird_image, target.current_bird_image.get_rect(center=(int(target.x), int(target.y))))
             pygame.display.flip()
-
+            if not self.targets:
+                if self.current_level < len(self.levels)-1:
+                    self.current_level += 1
+                    self.current_level_info = self.levels[self.current_level]
+                    for target in self.targets:
+                        target.speed = self.current_level_info.bird_speed
+                        target.amplitude_y = self.current_level_info.amplitude_y
+                        target.frequency_y = self.current_level_info.frequency_y
+                    print("Level completed! Proceeding to the next level...")
+                    # Pause before next level
+                    pygame.time.delay(2000)
+                else:
+                    # If all levels are completed, end the game
+                    print("Congratulations! You have completed all levels.")
+                    run = False
         pygame.quit()
 
 if __name__ == "__main__":
