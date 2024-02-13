@@ -10,7 +10,7 @@ class Level:
 
 
 class Target:
-    def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images):
+    def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images, screen_width):
         self.x = x
         self.y = y
         self.radius = radius
@@ -20,13 +20,14 @@ class Target:
         self.initial_y = y
         self.bird_images = bird_images
         self.current_bird_image = random.choice(bird_images)
+        self.screen_width = screen_width
     def move(self):
         self.x += self.speed
         self.y = self.amplitude_y * math.sin(self.frequency_y * self.x) + self.initial_y
-        if self.x - self.radius > self.width:
+        if self.x - self.radius > self.screen_width:
             self.x = -self.radius
         elif self.x + self.radius < 0:
-            self.x = self.radius + self.width
+            self.x = self.radius + self.screen_width
 class DuckHuntGame:
     def __init__(self, width, height):
         pygame.init()
@@ -36,17 +37,17 @@ class DuckHuntGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([width, height])
         self.bird_images = [
-            pygame.transform.scale(pygame.image.load("../assets/targets/bird1.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("../assets/targets/bird2.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("../assets/targets/bird3.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("../assets/targets/bird4.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird1.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird2.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird3.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird4.jpg").convert(), (40, 40)),
         ]
         self.targets = [
-            Target(100, 200, 20, 1, 100, 0.02, self.bird_images),
-            Target(300, 400, 20, -1, 50, 0.03, self.bird_images),
-            Target(500, 100, 20, 2, 150, 0.01, self.bird_images),
-            Target(700, 300, 20, -1.5, 10, 0.015, self.bird_images),
-            Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images)
+            Target(100, 200, 20, 1, 100, 0.02, self.bird_images, self.WIDTH),
+            Target(300, 400, 20, -1, 50, 0.03, self.bird_images, self.WIDTH),
+            Target(500, 100, 20, 2, 150, 0.01, self.bird_images, self.WIDTH),
+            Target(700, 300, 20, -1.5, 10, 0.015, self.bird_images, self.WIDTH),
+            Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images, self.WIDTH)
         ]
         self.levels = [
             Level(bird_speed=1, amplitude_y=10, frequency_y=0.4),
@@ -55,15 +56,15 @@ class DuckHuntGame:
         ]
         self.current_level = 0
         self.current_level_info = self.levels[self.current_level]
-        self.sound_shot = pygame.mixer.Sound("../assets/sounds/shot.mp3")
+        self.sound_shot = pygame.mixer.Sound("assets/sounds/shot.mp3")
         self.sound_shot.set_volume(0.08)
-        self.sound_bird1 = pygame.mixer.Sound("../assets/sounds/bird1.mp3")
-        self.sound_bird2 = pygame.mixer.Sound("../assets/sounds/bird2.mp3")
-        self.sound_bird3 = pygame.mixer.Sound("../assets/sounds/bird3.mp3")
-        self.sound_bird4 = pygame.mixer.Sound("../assets/sounds/bird4.mp3")
+        self.sound_bird1 = pygame.mixer.Sound("assets/sounds/bird1.mp3")
+        self.sound_bird2 = pygame.mixer.Sound("assets/sounds/bird2.mp3")
+        self.sound_bird3 = pygame.mixer.Sound("assets/sounds/bird3.mp3")
+        self.sound_bird4 = pygame.mixer.Sound("assets/sounds/bird4.mp3")
         for target in self.targets:
             target.width = self.WIDTH
-        self.background_image = pygame.transform.scale(pygame.image.load("../assets/bgs/bgs1.PNG").convert(), (width, height))
+        self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.PNG").convert(), (width, height))
     def run_game(self):
         run = True
         while run:
@@ -97,6 +98,13 @@ class DuckHuntGame:
                 if self.current_level < len(self.levels)-1:
                     self.current_level += 1
                     self.current_level_info = self.levels[self.current_level]
+                    self.targets = [
+                    Target(100, 200, 20, 1, 100, 0.02, self.bird_images, self.WIDTH),
+                    Target(300, 400, 20, -1, 50, 0.03, self.bird_images, self.WIDTH),
+                    Target(500, 100, 20, 2, 150, 0.01, self.bird_images, self.WIDTH),
+                    Target(700, 300, 20, -1.5, 10, 0.015, self.bird_images, self.WIDTH),
+                    Target(800, 600, 20, 1.5, 125, 0.025, self.bird_images, self.WIDTH)
+                ]
                     for target in self.targets:
                         target.speed = self.current_level_info.bird_speed
                         target.amplitude_y = self.current_level_info.amplitude_y
