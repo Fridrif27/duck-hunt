@@ -8,6 +8,7 @@ class Level:
         self.amplitude_y = amplitude_y
         self.frequency_y = frequency_y
 
+
 class Target:
     def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images):
         self.x = x
@@ -35,10 +36,10 @@ class DuckHuntGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([width, height])
         self.bird_images = [
-            pygame.transform.scale(pygame.image.load("targets/bird1.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("targets/bird2.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("targets/bird3.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("targets/bird4.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("../assets/targets/bird1.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("../assets/targets/bird2.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("../assets/targets/bird3.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("../assets/targets/bird4.jpg").convert(), (40, 40)),
         ]
         self.targets = [
             Target(100, 200, 20, 1, 100, 0.02, self.bird_images),
@@ -54,15 +55,15 @@ class DuckHuntGame:
         ]
         self.current_level = 0
         self.current_level_info = self.levels[self.current_level]
-        self.sound_shot = pygame.mixer.Sound("sounds/shot.mp3")
+        self.sound_shot = pygame.mixer.Sound("../assets/sounds/shot.mp3")
         self.sound_shot.set_volume(0.08)
-        self.sound_bird1 = pygame.mixer.Sound("sounds/bird1.mp3")
-        self.sound_bird2 = pygame.mixer.Sound("sounds/bird2.mp3")
-        self.sound_bird3 = pygame.mixer.Sound("sounds/bird3.mp3") 
-        self.sound_bird4 = pygame.mixer.Sound("sounds/bird4.mp3") 
+        self.sound_bird1 = pygame.mixer.Sound("../assets/sounds/bird1.mp3")
+        self.sound_bird2 = pygame.mixer.Sound("../assets/sounds/bird2.mp3")
+        self.sound_bird3 = pygame.mixer.Sound("../assets/sounds/bird3.mp3")
+        self.sound_bird4 = pygame.mixer.Sound("../assets/sounds/bird4.mp3")
         for target in self.targets:
             target.width = self.WIDTH
-        self.background_image = pygame.transform.scale(pygame.image.load("bgs/bgs1.png").convert(), (width, height))
+        self.background_image = pygame.transform.scale(pygame.image.load("../assets/bgs/bgs1.PNG").convert(), (width, height))
     def run_game(self):
         run = True
         while run:
