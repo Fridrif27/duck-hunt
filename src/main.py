@@ -57,10 +57,10 @@ class DuckHuntGame:
 
     def load_images(self):
         self.bird_images = [
-            pygame.transform.scale(pygame.image.load("assets/targets/bird1.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird2.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird3.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird4.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird1.png").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird2.png").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird3.png").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird4.png").convert(), (40, 40)),
         ]
 
     def load_sounds(self):
@@ -72,7 +72,7 @@ class DuckHuntGame:
         self.sound_bird4 = pygame.mixer.Sound("assets/sounds/bird4.mp3")
 
     def load_background(self):
-        self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.PNG").convert(), (self.WIDTH, self.HEIGHT))
+        self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
     def initialize_targets(self):
         level = self.levels[self.current_level]
