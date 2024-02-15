@@ -57,10 +57,10 @@ class DuckHuntGame:
 
     def load_images(self):
         self.bird_images = [
-            pygame.transform.scale(pygame.image.load("assets/targets/bird1.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird2.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird3.jpg").convert(), (40, 40)),
-            pygame.transform.scale(pygame.image.load("assets/targets/bird4.jpg").convert(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird1.png").convert_alpha(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird2.png").convert_alpha(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird3.png").convert_alpha(), (40, 40)),
+            pygame.transform.scale(pygame.image.load("assets/targets/bird4.png").convert_alpha(), (40, 40)),
         ]
 
     def load_sounds(self):
@@ -80,7 +80,7 @@ class DuckHuntGame:
             Target(100, 200, 20, 1, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
             Target(300, 400, 20, -1, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
             Target(500, 100, 20, 2, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
-           Target(700, 300, 20, -1.5, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
+            Target(700, 300, 20, -1.5, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH),
             Target(800, 600, 20, 1.5, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH)
         ]
 
