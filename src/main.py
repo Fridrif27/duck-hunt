@@ -78,7 +78,7 @@ class DuckHuntGame:
     
     def load_sounds(self):
         sound_files = ["shot.mp3", "bird1.mp3", "bird2.mp3", "bird3.mp3", "bird4.mp3"]
-        self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"assets/sounds/{file}") for file in sound_files}
+        self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"../assets/sounds/{file}") for file in sound_files}
         self.sounds["shot"].set_volume(0.08)
 
 
