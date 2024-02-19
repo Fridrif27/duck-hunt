@@ -47,6 +47,7 @@ class DuckHuntGame:
             Level(bird_speed=1.5, amplitude_y=150, frequency_y=0.03),
             Level(bird_speed=2, amplitude_y=200, frequency_y=0.04)
         ]
+        self.paused = False
         self.load_assets()
         self.initialize_targets()
 
@@ -57,10 +58,10 @@ class DuckHuntGame:
 
     def load_images(self):
         self.bird_images = [
-            pygame.image.load("../assets/targets/bird1.png").convert_alpha(),
-            pygame.image.load("../assets/targets/bird2.png").convert_alpha(),
-            pygame.image.load("../assets/targets/bird3.png").convert_alpha(),
-            pygame.image.load("../assets/targets/bird4.png").convert_alpha(),
+            pygame.image.load("assets/targets/bird1.png").convert_alpha(),
+            pygame.image.load("assets/targets/bird2.png").convert_alpha(),
+            pygame.image.load("assets/targets/bird3.png").convert_alpha(),
+            pygame.image.load("assets/targets/bird4.png").convert_alpha(),
         ]
         transparent_color = (0, 0, 0)
         for image in self.bird_images:
@@ -68,22 +69,22 @@ class DuckHuntGame:
         self.bird_images = [pygame.transform.scale(image, (40, 40)) for image in self.bird_images]
 
     def load_sounds(self):
-        self.sound_shot = pygame.mixer.Sound("../assets/sounds/shot.mp3")
+        self.sound_shot = pygame.mixer.Sound("assets/sounds/shot.mp3")
         self.sound_shot.set_volume(0.08)
-        self.sound_bird1 = pygame.mixer.Sound("../assets/sounds/bird1.mp3")
-        self.sound_bird2 = pygame.mixer.Sound("../assets/sounds/bird2.mp3")
-        self.sound_bird3 = pygame.mixer.Sound("../assets/sounds/bird3.mp3")
-        self.sound_bird4 = pygame.mixer.Sound("../assets/sounds/bird4.mp3")
+        self.sound_bird1 = pygame.mixer.Sound("assets/sounds/bird1.mp3")
+        self.sound_bird2 = pygame.mixer.Sound("assets/sounds/bird2.mp3")
+        self.sound_bird3 = pygame.mixer.Sound("assets/sounds/bird3.mp3")
+        self.sound_bird4 = pygame.mixer.Sound("assets/sounds/bird4.mp3")
         self.bird_images = [pygame.transform.scale(pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(), (40, 40)) for i in range(1, 5)]
     
     def load_sounds(self):
         sound_files = ["shot.mp3", "bird1.mp3", "bird2.mp3", "bird3.mp3", "bird4.mp3"]
-        self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"../assets/sounds/{file}") for file in sound_files}
+        self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"assets/sounds/{file}") for file in sound_files}
         self.sounds["shot"].set_volume(0.08)
 
 
     def load_background(self):
-        self.background_image = pygame.transform.scale(pygame.image.load("../assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
+        self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
     def initialize_targets(self):
         level = self.levels[self.current_level]
@@ -95,8 +96,9 @@ class DuckHuntGame:
         run = True
         while run:
             self.timer.tick(self.fps)
-            self.handle_events()
-            self.update_screen()
+            if not self.paused:
+                self.handle_events()
+                self.update_screen()
             run = self.check_game_status()
 
     def handle_events(self):
@@ -106,6 +108,9 @@ class DuckHuntGame:
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self.handle_shooting()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    self.paused = not self.paused
 
     def handle_shooting(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
