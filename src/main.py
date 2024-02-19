@@ -57,10 +57,10 @@ class DuckHuntGame:
 
     def load_images(self):
         self.bird_images = [
-            pygame.image.load("assets/targets/bird1.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird2.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird3.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird4.png").convert_alpha(),
+            pygame.image.load("../assets/targets/bird1.png").convert_alpha(),
+            pygame.image.load("../assets/targets/bird2.png").convert_alpha(),
+            pygame.image.load("../assets/targets/bird3.png").convert_alpha(),
+            pygame.image.load("../assets/targets/bird4.png").convert_alpha(),
         ]
         transparent_color = (0, 0, 0)
         for image in self.bird_images:
@@ -68,15 +68,15 @@ class DuckHuntGame:
         self.bird_images = [pygame.transform.scale(image, (40, 40)) for image in self.bird_images]
 
     def load_sounds(self):
-        self.sound_shot = pygame.mixer.Sound("assets/sounds/shot.mp3")
+        self.sound_shot = pygame.mixer.Sound("../assets/sounds/shot.mp3")
         self.sound_shot.set_volume(0.08)
-        self.sound_bird1 = pygame.mixer.Sound("assets/sounds/bird1.mp3")
-        self.sound_bird2 = pygame.mixer.Sound("assets/sounds/bird2.mp3")
-        self.sound_bird3 = pygame.mixer.Sound("assets/sounds/bird3.mp3")
-        self.sound_bird4 = pygame.mixer.Sound("assets/sounds/bird4.mp3")
+        self.sound_bird1 = pygame.mixer.Sound("../assets/sounds/bird1.mp3")
+        self.sound_bird2 = pygame.mixer.Sound("../assets/sounds/bird2.mp3")
+        self.sound_bird3 = pygame.mixer.Sound("../assets/sounds/bird3.mp3")
+        self.sound_bird4 = pygame.mixer.Sound("../assets/sounds/bird4.mp3")
 
     def load_background(self):
-        self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
+        self.background_image = pygame.transform.scale(pygame.image.load("../assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
     def initialize_targets(self):
         level = self.levels[self.current_level]
