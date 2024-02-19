@@ -2,7 +2,6 @@ import pygame
 import math
 import random
 
-
 class Level:
     def __init__(self, bird_speed, amplitude_y, frequency_y):
         self.bird_speed = bird_speed
@@ -11,9 +10,7 @@ class Level:
 
 
 class Target:
-    def __init__(
-        self, x, y, radius, speed, amplitude_y, frequency_y, bird_images, screen_width
-    ):
+    def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images, screen_width):
         self.x = x
         self.y = y
         self.radius = radius
@@ -24,9 +21,10 @@ class Target:
         self.bird_images = bird_images
         self.current_bird_image = random.choice(bird_images)
         self.screen_width = screen_width
+        self.direction = 1  # Початковий напрямок (праворуч)
 
     def move(self):
-        self.x += self.speed
+        self.x += self.speed * self.direction
         self.y = self.amplitude_y * math.sin(self.frequency_y * self.x) + self.initial_y
         self.check_boundary()
 
@@ -35,7 +33,6 @@ class Target:
             self.x = -self.radius
         elif self.x + self.radius < 0:
             self.x = self.screen_width + self.radius
-
 
 class DuckHuntGame:
     def __init__(self, width, height):
@@ -49,7 +46,7 @@ class DuckHuntGame:
         self.levels = [
             Level(bird_speed=1, amplitude_y=0, frequency_y=0),
             Level(bird_speed=1.5, amplitude_y=150, frequency_y=0.03),
-            Level(bird_speed=2, amplitude_y=200, frequency_y=0.04),
+            Level(bird_speed=2, amplitude_y=200, frequency_y=0.04)
         ]
         self.paused = False
         self.load_assets()
@@ -68,6 +65,7 @@ class DuckHuntGame:
         self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"assets/sounds/{file}") for file in sound_files}
         self.sounds["shot"].set_volume(0.08)
 
+
     def load_background(self):
         self.background_image = pygame.transform.scale(pygame.image.load("assets/bgs/bgs1.png").convert(), (self.WIDTH, self.HEIGHT))
 
@@ -75,19 +73,7 @@ class DuckHuntGame:
         level = self.levels[self.current_level]
         positions = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
         speeds = [1, -1, 2, -1.5, 1.5]
-        self.targets = [
-            Target(
-                pos[0],
-                pos[1],
-                20,
-                speed,
-                level.amplitude_y,
-                level.frequency_y,
-                self.bird_images,
-                self.WIDTH,
-            )
-            for pos, speed in zip(positions, speeds)
-        ]
+        self.targets = [Target(pos[0], pos[1], 20, speed, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH) for pos, speed in zip(positions, speeds)]
 
     def run_game(self):
         run = True
@@ -132,32 +118,42 @@ class DuckHuntGame:
         self.sounds["shot"].play()
         for target in self.targets:
             if (
-                target.x - target.radius <= mouse_x <= target.x + target.radius
-                and target.y - target.radius <= mouse_y <= target.y + target.radius
+                target.x - target.radius <= mouse_x <= target.x + target.radius and
+                target.y - target.radius <= mouse_y <= target.y + target.radius
             ):
                 self.targets.remove(target)
-                bird_sounds = [self.sounds[f"bird{i + 1}"] for i in range(4)]
-                bird_sound = bird_sounds[
-                    self.bird_images.index(target.current_bird_image)
-                ]
+                bird_sounds = [self.sounds[f"bird{i+1}"] for i in range(4)]
+                bird_sound = bird_sounds[self.bird_images.index(target.current_bird_image)]
                 bird_sound.play()
 
+    def display_paused_menu(self):
+        paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
+        paused_background_rect = paused_background_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
+        self.screen.blit(paused_background_image, paused_background_rect)
+
+        main_menu_image = pygame.image.load("assets/menu/pause_menu/Main_menu.png").convert_alpha()
+        main_menu_rect = main_menu_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
+        self.screen.blit(main_menu_image, main_menu_rect)
+
+        resume_image = pygame.image.load("assets/menu/pause_menu/Resume.png").convert_alpha()
+        resume_rect = resume_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 + 50))
+        self.screen.blit(resume_image, resume_rect)
+    
     def update_screen(self):
         self.screen.blit(self.background_image, (0, 0))
         if self.paused:
-            paused_image = pygame.image.load("assets/menu/Pause_image.png").convert_alpha()
-            paused_rect = paused_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
-            self.screen.blit(paused_image, paused_rect)
+            self.display_paused_menu()
             pygame.display.flip()
         else:
             for target in self.targets:
                 target.move()
-                if target.speed > 0: 
+                if target.speed > 0:
                     image = pygame.transform.flip(target.current_bird_image, True, False)
                 else:
                     image = target.current_bird_image
                 self.screen.blit(image, image.get_rect(center=(int(target.x), int(target.y))))
             pygame.display.flip()
+
 
     def check_game_status(self):
         if not self.targets:
@@ -172,7 +168,6 @@ class DuckHuntGame:
                 pygame.time.delay(1000)
                 return False
         return True
-
 
 if __name__ == "__main__":
     game = DuckHuntGame(900, 800)
