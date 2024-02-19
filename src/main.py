@@ -81,6 +81,8 @@ class DuckHuntGame:
             if not self.paused:
                 self.handle_events()
                 self.update_screen()
+            else:
+                self.handle_paused_events()
             run = self.check_game_status()
 
     def handle_events(self):
@@ -92,7 +94,23 @@ class DuckHuntGame:
                 self.handle_shooting()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
-                    self.paused = not self.paused
+                    self.toggle_pause()
+
+    def handle_paused_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    self.toggle_pause()
+
+    def toggle_pause(self):
+        self.paused = not self.paused
+        if self.paused:
+            pygame.mixer.pause()
+        else:
+            pygame.mixer.unpause()
 
     def handle_shooting(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -114,10 +132,15 @@ class DuckHuntGame:
             paused_image = pygame.image.load("assets/menu/Pause_image.png").convert_alpha()
             paused_rect = paused_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
             self.screen.blit(paused_image, paused_rect)
+            pygame.display.flip()
         else:
             for target in self.targets:
                 target.move()
-                self.screen.blit(target.current_bird_image, target.current_bird_image.get_rect(center=(int(target.x), int(target.y))))
+                if target.speed > 0: 
+                    image = pygame.transform.flip(target.current_bird_image, True, False)
+                else:
+                    image = target.current_bird_image
+                self.screen.blit(image, image.get_rect(center=(int(target.x), int(target.y))))
             pygame.display.flip()
 
     def check_game_status(self):
