@@ -145,7 +145,7 @@ class DuckHuntGame:
                 and target.y - target.radius <= mouse_y <= target.y + target.radius
             ):
                 self.targets.remove(target)
-                bird_sounds = [self.sounds[f"bird{i+1}"] for i in range(4)]
+                bird_sounds = [self.sounds[f"bird{i + 1}"] for i in range(4)]
                 bird_sound = bird_sounds[
                     self.bird_images.index(target.current_bird_image)
                 ]
