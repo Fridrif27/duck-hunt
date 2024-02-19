@@ -57,24 +57,6 @@ class DuckHuntGame:
         self.load_background()
 
     def load_images(self):
-        self.bird_images = [
-            pygame.image.load("assets/targets/bird1.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird2.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird3.png").convert_alpha(),
-            pygame.image.load("assets/targets/bird4.png").convert_alpha(),
-        ]
-        transparent_color = (0, 0, 0)
-        for image in self.bird_images:
-            image.set_colorkey(transparent_color)
-        self.bird_images = [pygame.transform.scale(image, (40, 40)) for image in self.bird_images]
-
-    def load_sounds(self):
-        self.sound_shot = pygame.mixer.Sound("assets/sounds/shot.mp3")
-        self.sound_shot.set_volume(0.08)
-        self.sound_bird1 = pygame.mixer.Sound("assets/sounds/bird1.mp3")
-        self.sound_bird2 = pygame.mixer.Sound("assets/sounds/bird2.mp3")
-        self.sound_bird3 = pygame.mixer.Sound("assets/sounds/bird3.mp3")
-        self.sound_bird4 = pygame.mixer.Sound("assets/sounds/bird4.mp3")
         self.bird_images = [pygame.transform.scale(pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(), (40, 40)) for i in range(1, 5)]
     
     def load_sounds(self):
@@ -128,10 +110,15 @@ class DuckHuntGame:
 
     def update_screen(self):
         self.screen.blit(self.background_image, (0, 0))
-        for target in self.targets:
-            target.move()
-            self.screen.blit(target.current_bird_image, target.current_bird_image.get_rect(center=(int(target.x), int(target.y))))
-        pygame.display.flip()
+        if self.paused:
+            paused_image = pygame.image.load("assets/menu/Pause_image.png").convert_alpha()
+            paused_rect = paused_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
+            self.screen.blit(paused_image, paused_rect)
+        else:
+            for target in self.targets:
+                target.move()
+                self.screen.blit(target.current_bird_image, target.current_bird_image.get_rect(center=(int(target.x), int(target.y))))
+            pygame.display.flip()
 
     def check_game_status(self):
         if not self.targets:
