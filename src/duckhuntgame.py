@@ -12,22 +12,25 @@ class DuckHuntGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([width, height])
         self.current_level = 0
+        self.paused = False
+        self.load_levels()
+        self.load_assets()
+        self.load_background()
+        self.initialize_targets()
+
+    def load_levels(self):
         self.levels = [
             Level(1, 0, 0, "assets/bgs/bgs1.png"),
             Level(1.5, 150, 0.03, "assets/bgs/bgs2.png"),
             Level(2, 200, 0.04, "assets/bgs/bgs3.png")
         ]
 
-        self.paused = False
-        self.load_assets()
-        self.load_background()
-        self.initialize_targets()
-
     def load_assets(self):
         self.load_images()
         self.load_sounds()
         self.load_background()
-
+        self.load_paused_images()
+        
     def load_images(self):
         self.bird_images = [pygame.transform.scale(pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(), (40, 40)) for i in range(1, 5)]
     
@@ -39,8 +42,13 @@ class DuckHuntGame:
     def load_background(self):
         current_level_background = f"assets/bgs/bgs{self.current_level + 1}.png"
         self.background_image = pygame.transform.scale(pygame.image.load(current_level_background).convert(), (self.WIDTH, self.HEIGHT))
-
-
+    
+    def load_paused_images(self):
+        paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
+        self.paused_background_image = pygame.transform.scale(paused_background_image, (self.WIDTH, self.HEIGHT))
+        self.main_menu_image = pygame.image.load("assets/menu/pause_menu/Main_menu.png").convert_alpha()
+        self.resume_image = pygame.image.load("assets/menu/pause_menu/Resume.png").convert_alpha()
+        
     def initialize_targets(self):
         level = self.levels[self.current_level]
         positions = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
@@ -74,9 +82,18 @@ class DuckHuntGame:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if self.WIDTH // 2 - self.main_menu_image.get_width() // 2 <= mouse_x <= self.WIDTH // 2 + self.main_menu_image.get_width() // 2 and \
+                    self.HEIGHT // 2 - self.main_menu_image.get_height() // 2 <= mouse_y <= self.HEIGHT // 2 + self.main_menu_image.get_height() // 2:
+                    pygame.mixer.pause()
+                elif self.WIDTH // 2 - self.resume_image.get_width() // 2 <= mouse_x <= self.WIDTH // 2 + self.resume_image.get_width() // 2 and \
+                    self.HEIGHT // 2 + 50 - self.resume_image.get_height() // 2 <= mouse_y <= self.HEIGHT // 2 + 50 + self.resume_image.get_height() // 2:
+                    self.toggle_pause()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     self.toggle_pause()
+
 
     def toggle_pause(self):
         self.paused = not self.paused
@@ -99,17 +116,11 @@ class DuckHuntGame:
                 bird_sound.play()
 
     def display_paused_menu(self):
-        paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
-        paused_background_rect = paused_background_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
-        self.screen.blit(paused_background_image, paused_background_rect)
-
-        main_menu_image = pygame.image.load("assets/menu/pause_menu/Main_menu.png").convert_alpha()
-        main_menu_rect = main_menu_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
-        self.screen.blit(main_menu_image, main_menu_rect)
-
-        resume_image = pygame.image.load("assets/menu/pause_menu/Resume.png").convert_alpha()
-        resume_rect = resume_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 + 50))
-        self.screen.blit(resume_image, resume_rect)
+        self.screen.blit(self.paused_background_image, (0, 0))
+        main_menu_rect = self.main_menu_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
+        self.screen.blit(self.main_menu_image, main_menu_rect)
+        resume_rect = self.resume_image.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 + 50))
+        self.screen.blit(self.resume_image, resume_rect)
     
     def update_screen(self):
         self.screen.blit(self.background_image, (0, 0))
