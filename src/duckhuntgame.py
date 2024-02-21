@@ -12,8 +12,8 @@ class DuckHuntGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode([width, height])
         self.current_level = 0
+        self.in_gameover_menu = False
         self.paused = False
-        self.in_main_menu = True
         self.load_assets()
 
     def load_levels(self):
@@ -31,6 +31,7 @@ class DuckHuntGame:
         self.initialize_targets()
         self.load_sounds()
         self.load_paused_images()
+        self.load_gameover_menu_images()
 
     def load_images(self):
         self.bird_images = [pygame.transform.scale(pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(), (50, 50)) for i in range(1, 5)]
@@ -78,7 +79,20 @@ class DuckHuntGame:
         self.screen.blit(self.accuracy, self.accuracy_rect)
         self.screen.blit(self.countdown, self.countdown_rect)
         self.screen.blit(self.reset_scores, self.reset_scores_rect)
-        
+    
+    def load_gameover_menu_images(self):
+        gameover_menu_background = pygame.image.load("assets/menu/gameover_menu/background.PNG").convert_alpha()
+        self.gameover_menu_background = pygame.transform.scale(gameover_menu_background, (self.WIDTH, self.HEIGHT))
+        self.gameover_main_menu = pygame.image.load("assets/menu/gameover_menu/main_menu.png").convert_alpha()
+        self.gameover_exit = pygame.image.load("assets/menu/gameover_menu/exit.png").convert_alpha()
+        self.gameover_main_menu_rect = self.gameover_main_menu.get_rect(center=(200, 450))
+        self.gameover_exit_rect = self.gameover_exit.get_rect(center=(700, 450))
+
+    def display_gameover_menu(self):
+        self.screen.blit(self.gameover_menu_background, (0, 0))
+        self.screen.blit(self.gameover_main_menu, self.gameover_main_menu_rect)
+        self.screen.blit(self.gameover_exit, self.gameover_exit_rect)
+
     def initialize_targets(self):
         level = self.levels[self.current_level]
         positions = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
@@ -86,17 +100,6 @@ class DuckHuntGame:
         self.targets = [Target(pos[0], pos[1], 20, speed, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH) for pos, speed in zip(positions, speeds)]
         self.load_background()
 
-    def run_game(self):
-        run = True
-        while run:
-            self.timer.tick(self.fps)
-            if not self.paused:
-                self.handle_events()
-                self.update_screen()
-            else:
-                self.handle_paused_events()
-            run = self.check_game_status()
-            
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -141,17 +144,27 @@ class DuckHuntGame:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if self.check_button_clicked(self.free_play_rect, self.free_play, mouse_x, mouse_y):
-                    self.in_main_menu = False
                     self.run_game()
                 elif self.check_button_clicked(self.accuracy_rect, self.accuracy, mouse_x, mouse_y):
-                    self.in_main_menu = False
                     self.run_game()
                 elif self.check_button_clicked(self.countdown_rect, self.countdown, mouse_x, mouse_y):
-                    self.in_main_menu = False
                     self.run_game()
                 elif self.check_button_clicked(self.reset_scores_rect, self.reset_scores, mouse_x, mouse_y):
-                    self.in_main_menu = False
                     self.run_game()
+
+    def handle_gameover_menu_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if self.check_button_clicked(self.gameover_main_menu_rect, self.gameover_main_menu, mouse_x, mouse_y):
+                    self.in_gameover_menu = False
+                    self.run_main_menu() 
+                elif self.check_button_clicked(self.gameover_exit_rect, self.gameover_exit, mouse_x, mouse_y):
+                    pygame.quit()
+                    quit()
 
     def toggle_pause(self):
         self.paused = not self.paused
@@ -201,7 +214,30 @@ class DuckHuntGame:
                 pygame.time.delay(1000)
                 return False
         return True
+
+    def run_game(self):
+        self.in_main_menu = False
+        run = True
+        while run:
+            self.timer.tick(self.fps)
+            if not self.paused:
+                self.handle_events()
+                self.update_screen()
+                if not self.check_game_status():
+                    self.run_gameover_menu()
+            else:
+                self.handle_paused_events()
+            run = self.check_game_status()
+
+    def run_gameover_menu(self):
+        self.in_gameover_menu = True
+        while self.in_gameover_menu:
+            self.display_gameover_menu()
+            self.handle_gameover_menu_events()
+            pygame.display.flip()
+
     def run_main_menu(self):
+        self.in_main_menu = True
         game = DuckHuntGame(900, 800)
         while self.in_main_menu:
             game.timer.tick(self.fps)
