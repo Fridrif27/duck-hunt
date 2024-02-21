@@ -14,13 +14,15 @@ class DuckHuntGame:
         self.current_level = 0
         self.in_gameover_menu = False
         self.paused = False
+        self.score = 0
+        self.shot_count = 0
         self.load_assets()
 
     def load_levels(self):
         self.levels = [
-            Level(1, 0, 0, "assets/bgs/bgs1.png"),
-            Level(1.5, 150, 0.03, "assets/bgs/bgs2.png"),
-            Level(2, 200, 0.04, "assets/bgs/bgs3.png")
+            Level(1, 0, 0, "assets/bgs/bgs1.png", "assets/banners/banner_1.PNG"),
+            Level(1.5, 150, 0.03, "assets/bgs/bgs2.png", "assets/banners/banner_1.PNG"),
+            Level(2, 200, 0.04, "assets/bgs/bgs3.png", "assets/banners/banner_2.PNG")
         ]
 
     def load_assets(self):
@@ -188,6 +190,7 @@ class DuckHuntGame:
     def handle_shooting(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.sounds["shot"].play()
+        self.shot_count += 1
         for target in self.targets:
             if (
                     target.x - target.radius <= mouse_x <= target.x + target.radius and
@@ -197,13 +200,23 @@ class DuckHuntGame:
                 bird_sounds = [self.sounds[f"bird{i + 1}"] for i in range(4)]
                 bird_sound = bird_sounds[self.bird_images.index(target.current_bird_image)]
                 bird_sound.play()
+                self.score += 1
 
     def update_screen(self):
         self.screen.blit(self.background_image, (0, 0))
         if self.paused:
             self.display_paused_menu()
-            pygame.display.flip()
         else:
+            if self.levels[self.current_level].banner_image is not None:
+                banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
+                banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
+                self.screen.blit(banner, banner_rect)
+    
+                font = pygame.font.SysFont('Arial', 30)
+                shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
+                score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
+                self.screen.blit(shot_text, (350, 680))
+                self.screen.blit(score_text, (350, 720))
             for target in self.targets:
                 target.move()
                 if target.speed > 0:
@@ -211,7 +224,7 @@ class DuckHuntGame:
                 else:
                     image = target.current_bird_image
                 self.screen.blit(image, image.get_rect(center=(int(target.x), int(target.y))))
-            pygame.display.flip()
+        pygame.display.flip()
 
     def check_game_status(self):
         if not self.targets:
@@ -219,7 +232,6 @@ class DuckHuntGame:
                 self.current_level += 1
                 self.initialize_targets()
                 print("Level completed! Proceeding to the next level...")
-                pygame.time.delay(2000)
                 return True
             else:
                 print("Congratulations! You have completed all levels.")

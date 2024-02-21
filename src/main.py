@@ -1,8 +1,8 @@
 import pygame
-from src.game import Game
+from game import DuckHuntGame
 
 def main():
-    game = Game(900, 800)
+    game = DuckHuntGame(900, 800)
     game.run_main_menu()
 
 if __name__ == "__main__":
