@@ -15,6 +15,7 @@ class DuckHuntGame:
         self.current_level = 0
         self.in_gameover_menu = False
         self.paused = False
+        self.accuracy_mode = False
         self.score = 0
         self.shot_count = 0
         self.load_assets()
@@ -36,6 +37,7 @@ class DuckHuntGame:
         self.initialize_gun()
         self.load_paused_images()
         self.load_gameover_menu_images()
+        self.gameover_score_font = pygame.font.SysFont('Arial', 36)
         
     def initialize_gun(self):
         self.gun_image = pygame.image.load("assets/gun/Gun.PNG").convert_alpha()
@@ -122,6 +124,9 @@ class DuckHuntGame:
         self.screen.blit(self.gameover_menu_background, (0, 0))
         self.screen.blit(self.gameover_main_menu, self.gameover_main_menu_rect)
         self.screen.blit(self.gameover_exit, self.gameover_exit_rect)
+        score_text = self.gameover_score_font.render(f'{self.score}', True, (0, 0, 0))
+        self.screen.blit(score_text, (435, 300))
+
         
     def initialize_targets(self):
         level = self.levels[self.current_level]
@@ -176,8 +181,10 @@ class DuckHuntGame:
                 if self.check_button_clicked(self.free_play_rect, self.free_play, mouse_x, mouse_y):
                     self.run_game()
                 elif self.check_button_clicked(self.accuracy_rect, self.accuracy, mouse_x, mouse_y):
+                    self.accuracy_mode = True
                     self.run_game()
                 elif self.check_button_clicked(self.countdown_rect, self.countdown, mouse_x, mouse_y):
+                    self.countdown = True
                     self.run_game()
                 elif self.check_button_clicked(self.reset_scores_rect, self.reset_scores, mouse_x, mouse_y):
                     self.run_game()
@@ -264,6 +271,10 @@ class DuckHuntGame:
                 self.handle_events()
                 self.update_gun()
                 self.update_screen()
+                if self.accuracy_mode:
+                    if self.shot_count >= 15:
+                        self.run_gameover_menu()
+                        return
             else:
                 self.handle_paused_events()
             run = self.check_game_status()
