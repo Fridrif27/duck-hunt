@@ -16,8 +16,10 @@ class DuckHuntGame:
         self.in_gameover_menu = False
         self.paused = False
         self.accuracy_mode = False
+        self.countdown_mode = False
         self.score = 0
         self.shot_count = 0
+        self.countdown_timer = 15
         self.load_assets()
 
     def load_levels(self):
@@ -184,7 +186,7 @@ class DuckHuntGame:
                     self.accuracy_mode = True
                     self.run_game()
                 elif self.check_button_clicked(self.countdown_rect, self.countdown, mouse_x, mouse_y):
-                    self.countdown = True
+                    self.countdown_mode = True
                     self.run_game()
                 elif self.check_button_clicked(self.reset_scores_rect, self.reset_scores, mouse_x, mouse_y):
                     self.run_game()
@@ -231,15 +233,13 @@ class DuckHuntGame:
             self.display_paused_menu()
         else:
             if self.levels[self.current_level].banner_image is not None:
-                banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
-                banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
-                self.screen.blit(banner, banner_rect)
-                font = pygame.font.SysFont('Arial', 30)
-                shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
-                score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
-                self.screen.blit(shot_text, (350, 680))
-                self.screen.blit(score_text, (350, 720))  
-                self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
+                self.shot_score()
+                if self.countdown_mode:
+                    font = pygame.font.SysFont('Arial', 30)
+                    countdown_text = font.render(f'Time: {int(self.countdown_timer)}', True, (0, 0, 0))
+                    countdown_rect = countdown_text.get_rect(midright=(570, 700))
+                    self.screen.blit(countdown_text, countdown_rect)
+                    self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
             for target in self.targets:
                 target.move()
                 if target.speed > 0:
@@ -249,6 +249,16 @@ class DuckHuntGame:
                 self.screen.blit(image, image.get_rect(center=(int(target.x), int(target.y))))
         pygame.display.flip()
 
+    def shot_score(self):
+        banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
+        banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
+        self.screen.blit(banner, banner_rect)
+        font = pygame.font.SysFont('Arial', 30)
+        shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
+        score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
+        self.screen.blit(shot_text, (350, 680))
+        self.screen.blit(score_text, (350, 720))  
+        self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
     def check_game_status(self):
         if not self.targets:
             if self.current_level < len(self.levels) - 1:
@@ -273,6 +283,11 @@ class DuckHuntGame:
                 self.update_screen()
                 if self.accuracy_mode:
                     if self.shot_count >= 15:
+                        self.run_gameover_menu()
+                        return
+                if self.countdown_mode:
+                    self.countdown_timer -= 1 / self.fps
+                    if self.countdown_timer <= 0:
                         self.run_gameover_menu()
                         return
             else:
