@@ -211,7 +211,7 @@ class DuckHuntGame:
                 return True
             else:
                 print("Congratulations! You have completed all levels.")
-                pygame.time.delay(1000)
+                self.run_gameover_menu()
                 return False
         return True
 
@@ -223,8 +223,6 @@ class DuckHuntGame:
             if not self.paused:
                 self.handle_events()
                 self.update_screen()
-                if not self.check_game_status():
-                    self.run_gameover_menu()
             else:
                 self.handle_paused_events()
             run = self.check_game_status()
