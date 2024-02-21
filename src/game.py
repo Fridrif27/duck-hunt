@@ -1,4 +1,5 @@
 import pygame
+import math
 from level import Level
 from target import Target
 
@@ -32,8 +33,23 @@ class DuckHuntGame:
         self.load_images()
         self.initialize_targets()
         self.load_sounds()
+        self.initialize_gun()
         self.load_paused_images()
         self.load_gameover_menu_images()
+        
+    def initialize_gun(self):
+        self.gun_image = pygame.image.load("assets/gun/Gun.PNG").convert_alpha()
+        self.gun_image = pygame.transform.scale(self.gun_image, (200, 200))
+        self.gun_rect = self.gun_image.get_rect(center=(450, 600))
+
+    def update_gun(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        offset_x = mouse_x - self.gun_rect.centerx
+        offset_y = mouse_y - self.gun_rect.centery
+        angle = math.atan2(offset_y, offset_x)
+        angle = math.degrees(angle)
+        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, -angle)
+        self.rotated_gun_rect = self.rotated_gun_image.get_rect(center=self.gun_rect.center)
 
     def load_images(self):
         self.bird_images = [
@@ -211,12 +227,12 @@ class DuckHuntGame:
                 banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
                 banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
                 self.screen.blit(banner, banner_rect)
-    
                 font = pygame.font.SysFont('Arial', 30)
                 shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
                 score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
                 self.screen.blit(shot_text, (350, 680))
-                self.screen.blit(score_text, (350, 720))
+                self.screen.blit(score_text, (350, 720))  
+                self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
             for target in self.targets:
                 target.move()
                 if target.speed > 0:
@@ -246,6 +262,7 @@ class DuckHuntGame:
             self.timer.tick(self.fps)
             if not self.paused:
                 self.handle_events()
+                self.update_gun()
                 self.update_screen()
             else:
                 self.handle_paused_events()
