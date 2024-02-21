@@ -34,7 +34,13 @@ class DuckHuntGame:
         self.load_gameover_menu_images()
 
     def load_images(self):
-        self.bird_images = [pygame.transform.scale(pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(), (50, 50)) for i in range(1, 5)]
+        self.bird_images = [
+            pygame.transform.scale(
+                pygame.image.load(f"../assets/targets/bird{i}.png").convert_alpha(),
+                (50, 50)
+            )
+            for i in range(1, 5)
+        ]
     
     def load_sounds(self):
         sound_files = ["shot.mp3", "bird1.mp3", "bird2.mp3", "bird3.mp3", "bird4.mp3"]
@@ -44,8 +50,11 @@ class DuckHuntGame:
         pygame.mixer.music.play(-1)
 
     def load_background(self):
-        current_level_background = f"assets/bgs/bgs{self.current_level + 1}.png"
-        self.background_image = pygame.transform.scale(pygame.image.load(current_level_background).convert(), (self.WIDTH, self.HEIGHT))
+        current_level_background = f"../assets/bgs/bgs{self.current_level + 1}.png"
+        self.background_image = pygame.transform.scale(
+            pygame.image.load(current_level_background).convert(),
+            (self.WIDTH, self.HEIGHT)
+        )
     
     def load_paused_images(self):
         paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
@@ -55,7 +64,10 @@ class DuckHuntGame:
 
         self.main_menu_rect = self.main_menu_image.get_rect(center=(200, 450))
         self.resume_rect = self.resume_image.get_rect(center=(700, 450))
-    
+
+    def display_image(self, image, rect):
+        self.screen.blit(image, rect)
+
     def display_paused_menu(self):
         self.screen.blit(self.paused_background_image, (0, 0))
         self.screen.blit(self.main_menu_image, self.main_menu_rect)
@@ -74,12 +86,12 @@ class DuckHuntGame:
         self.reset_scores_rect = self.reset_scores.get_rect(center=(700, 600))
 
     def display_start_menu(self):
-        self.screen.blit(self.start_menu_background, (0, 0))
-        self.screen.blit(self.free_play, self.free_play_rect)
-        self.screen.blit(self.accuracy, self.accuracy_rect)
-        self.screen.blit(self.countdown, self.countdown_rect)
-        self.screen.blit(self.reset_scores, self.reset_scores_rect)
-    
+        self.display_image(self.start_menu_background, (0, 0))
+        self.display_image(self.free_play, self.free_play_rect)
+        self.display_image(self.accuracy, self.accuracy_rect)
+        self.display_image(self.countdown, self.countdown_rect)
+        self.display_image(self.reset_scores, self.reset_scores_rect)
+
     def load_gameover_menu_images(self):
         gameover_menu_background = pygame.image.load("assets/menu/gameover_menu/background.PNG").convert_alpha()
         self.gameover_menu_background = pygame.transform.scale(gameover_menu_background, (self.WIDTH, self.HEIGHT))
@@ -92,7 +104,7 @@ class DuckHuntGame:
         self.screen.blit(self.gameover_menu_background, (0, 0))
         self.screen.blit(self.gameover_main_menu, self.gameover_main_menu_rect)
         self.screen.blit(self.gameover_exit, self.gameover_exit_rect)
-
+        
     def initialize_targets(self):
         level = self.levels[self.current_level]
         positions = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
@@ -178,14 +190,14 @@ class DuckHuntGame:
         self.sounds["shot"].play()
         for target in self.targets:
             if (
-                target.x - target.radius <= mouse_x <= target.x + target.radius and
-                target.y - target.radius <= mouse_y <= target.y + target.radius
+                    target.x - target.radius <= mouse_x <= target.x + target.radius and
+                    target.y - target.radius <= mouse_y <= target.y + target.radius
             ):
                 self.targets.remove(target)
-                bird_sounds = [self.sounds[f"bird{i+1}"] for i in range(4)]
+                bird_sounds = [self.sounds[f"bird{i + 1}"] for i in range(4)]
                 bird_sound = bird_sounds[self.bird_images.index(target.current_bird_image)]
                 bird_sound.play()
-    
+
     def update_screen(self):
         self.screen.blit(self.background_image, (0, 0))
         if self.paused:
