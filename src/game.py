@@ -36,7 +36,7 @@ class DuckHuntGame:
     def load_images(self):
         self.bird_images = [
             pygame.transform.scale(
-                pygame.image.load(f"../assets/targets/bird{i}.png").convert_alpha(),
+                pygame.image.load(f"assets/targets/bird{i}.png").convert_alpha(),
                 (50, 50)
             )
             for i in range(1, 5)
@@ -50,7 +50,7 @@ class DuckHuntGame:
         pygame.mixer.music.play(-1)
 
     def load_background(self):
-        current_level_background = f"../assets/bgs/bgs{self.current_level + 1}.png"
+        current_level_background = f"assets/bgs/bgs{self.current_level + 1}.png"
         self.background_image = pygame.transform.scale(
             pygame.image.load(current_level_background).convert(),
             (self.WIDTH, self.HEIGHT)
