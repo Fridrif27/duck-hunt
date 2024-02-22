@@ -1,7 +1,7 @@
 import pygame
-import math
 from level import Level
 from target import Target
+from gun import Gun
 
 
 class DuckHuntGame:
@@ -36,25 +36,17 @@ class DuckHuntGame:
         self.load_images()
         self.initialize_targets()
         self.load_sounds()
-        self.initialize_gun()
         self.load_paused_images()
         self.load_gameover_menu_images()
+        self.load_gun_assets()
         self.banner_image()
         self.gameover_score_font = pygame.font.SysFont("../assets/fonts/AA_Magnum.ttf", 36)
-        
-    def initialize_gun(self):
-        self.gun_image = pygame.image.load("../assets/gun/Gun.PNG").convert_alpha()
-        self.gun_image = pygame.transform.scale(self.gun_image, (200, 200))
-        self.gun_rect = self.gun_image.get_rect(center=(450, 600))
+
+    def load_gun_assets(self):
+        self.gun = Gun("../assets/gun/Gun.PNG", (450, 600))
 
     def update_gun(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        offset_x = mouse_x - self.gun_rect.centerx
-        offset_y = mouse_y - self.gun_rect.centery
-        angle = math.atan2(offset_y, offset_x)
-        angle = math.degrees(angle)
-        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, -angle)
-        self.rotated_gun_rect = self.rotated_gun_image.get_rect(center=self.gun_rect.center)
+        self.gun.update()
 
     def load_images(self):
         self.bird_images = [
@@ -78,12 +70,12 @@ class DuckHuntGame:
             pygame.image.load(current_level_background).convert(),
             (self.WIDTH, self.HEIGHT)
         )
+
     def banner_image(self):
         self.pause_button = pygame.image.load("../assets/banners/pause_button.png").convert_alpha()
         self.restart_button = pygame.image.load("../assets/banners/restart_button.png").convert_alpha()
         self.pause_button_rect = self.pause_button.get_rect(center=(723, 685))
         self.restart_button_rect = self.restart_button.get_rect(center=(750, 745))
-
 
     def load_paused_images(self):
         paused_background_image = pygame.image.load("../assets/menu/pause_menu/background.png").convert_alpha()
@@ -259,7 +251,7 @@ class DuckHuntGame:
                     countdown_text = font.render(f'Time: {int(self.countdown_timer)}', True, (0, 0, 0))
                     countdown_rect = countdown_text.get_rect(midright=(570, 700))
                     self.screen.blit(countdown_text, countdown_rect)
-                    self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
+                    self.screen.blit(self.gun.rotated_image, self.gun.rotated_rect)
                 self.screen.blit(self.pause_button, self.pause_button_rect)
                 self.screen.blit(self.restart_button, self.restart_button_rect)
             for target in self.targets:
@@ -280,7 +272,7 @@ class DuckHuntGame:
         score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
         self.screen.blit(shot_text, (350, 680))
         self.screen.blit(score_text, (350, 720))  
-        self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
+        self.screen.blit(self.gun.rotated_image, self.gun.rotated_rect)
 
     def check_game_status(self):
         if not self.targets:

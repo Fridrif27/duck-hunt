@@ -1,6 +1,6 @@
-import pygame
 import math
 import random
+
 
 class Target:
     def __init__(self, x, y, radius, speed, amplitude_y, frequency_y, bird_images, screen_width):
