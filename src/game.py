@@ -39,6 +39,7 @@ class DuckHuntGame:
         self.initialize_gun()
         self.load_paused_images()
         self.load_gameover_menu_images()
+        self.banner_image()
         self.gameover_score_font = pygame.font.SysFont('Arial', 36)
         
     def initialize_gun(self):
@@ -77,7 +78,13 @@ class DuckHuntGame:
             pygame.image.load(current_level_background).convert(),
             (self.WIDTH, self.HEIGHT)
         )
-    
+    def banner_image(self):
+        self.pause_button = pygame.image.load("assets/banners/pause_button.png").convert_alpha()
+        self.restart_button = pygame.image.load("assets/banners/restart_button.png").convert_alpha()
+        self.pause_button_rect = self.pause_button.get_rect(center=(723, 685))
+        self.restart_button_rect = self.restart_button.get_rect(center=(750, 745))
+
+
     def load_paused_images(self):
         paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
         self.paused_background_image = pygame.transform.scale(paused_background_image, (self.WIDTH, self.HEIGHT))
@@ -135,6 +142,12 @@ class DuckHuntGame:
         speeds = [1, -1, 2, -1.5, 1.5]
         self.targets = [Target(pos[0], pos[1], 20, speed, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH) for pos, speed in zip(positions, speeds)]
         self.load_background()
+        
+    def restart_level(self):
+        self.current_level = 0 
+        self.score = 0
+        self.shot_count = 0
+        self.initialize_targets()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -142,7 +155,13 @@ class DuckHuntGame:
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                self.handle_shooting()
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if self.check_button_clicked(self.pause_button_rect, self.pause_button, mouse_x, mouse_y):
+                    self.toggle_pause()
+                elif self.check_button_clicked(self.restart_button_rect, self.restart_button, mouse_x, mouse_y):
+                    self.restart_level()
+                else:
+                    self.handle_shooting()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     self.toggle_pause()
@@ -188,7 +207,7 @@ class DuckHuntGame:
                     self.countdown_mode = True
                     self.run_game()
                 elif self.check_button_clicked(self.reset_scores_rect, self.reset_scores, mouse_x, mouse_y):
-                    self.run_game()
+                    self.run_main_menu()
 
     def handle_gameover_menu_events(self):
         for event in pygame.event.get():
@@ -239,6 +258,8 @@ class DuckHuntGame:
                     countdown_rect = countdown_text.get_rect(midright=(570, 700))
                     self.screen.blit(countdown_text, countdown_rect)
                     self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
+                self.screen.blit(self.pause_button, self.pause_button_rect)
+                self.screen.blit(self.restart_button, self.restart_button_rect)
             for target in self.targets:
                 target.move()
                 if target.speed > 0:
