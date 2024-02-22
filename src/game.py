@@ -128,7 +128,6 @@ class DuckHuntGame:
         self.screen.blit(self.gameover_exit, self.gameover_exit_rect)
         score_text = self.gameover_score_font.render(f'{self.score}', True, (0, 0, 0))
         self.screen.blit(score_text, (435, 300))
-
         
     def initialize_targets(self):
         level = self.levels[self.current_level]
@@ -259,6 +258,7 @@ class DuckHuntGame:
         self.screen.blit(shot_text, (350, 680))
         self.screen.blit(score_text, (350, 720))  
         self.screen.blit(self.rotated_gun_image, self.rotated_gun_rect)
+
     def check_game_status(self):
         if not self.targets:
             if self.current_level < len(self.levels) - 1:
@@ -310,9 +310,11 @@ class DuckHuntGame:
             game.display_start_menu()
             pygame.display.flip()
 
+
 def main():
     game = DuckHuntGame(900, 800)
     game.run_main_menu()
+
 
 if __name__ == "__main__":
     main()
