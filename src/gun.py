@@ -7,6 +7,8 @@ class Gun:
         self.image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (200, 200))
         self.rect = self.image.get_rect(center=initial_position)
+        self.rotated_image = self.image
+        self.rotated_rect = self.rect
 
     def update(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
