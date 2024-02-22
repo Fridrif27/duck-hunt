@@ -148,6 +148,8 @@ class DuckHuntGame:
         self.score = 0
         self.shot_count = 0
         self.initialize_targets()
+        if self.countdown_mode:
+            self.countdown_timer = 15
 
     def handle_events(self):
         for event in pygame.event.get():
