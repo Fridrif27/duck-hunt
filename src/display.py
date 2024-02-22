@@ -1,10 +1,11 @@
 import pygame
 
+
 class Display:
-    def __init__(self, WIDTH, HEIGHT):
-        self.WIDTH = WIDTH
-        self.HEIGHT = HEIGHT
-        self.screen = pygame.display.set_mode([WIDTH, HEIGHT])
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.screen = pygame.display.set_mode([width, height])
         self.gameover_score_font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 36)
 
     def display_image(self, image, rect):

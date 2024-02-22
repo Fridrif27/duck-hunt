@@ -4,6 +4,7 @@ from target import Target
 from gun import Gun
 from display import Display
 
+
 class DuckHuntGame:
     def __init__(self, width, height):
         pygame.init()
@@ -24,11 +25,12 @@ class DuckHuntGame:
         self.load_assets()
 
     def load_levels(self):
-        self.levels = [
-            Level(1, 0, 0, "../assets/bgs/bgs1.png", "../assets/banners/banner_1.PNG"),
-            Level(1.5, 150, 0.03, "../assets/bgs/bgs2.png", "../assets/banners/banner_1.PNG"),
-            Level(2, 200, 0.04, "../assets/bgs/bgs3.png", "../assets/banners/banner_2.PNG")
+        level_data = [
+            (1, 0, 0, "../assets/bgs/bgs1.png", "../assets/banners/banner_1.png"),
+            (1.5, 150, 0.03, "../assets/bgs/bgs2.png", "../assets/banners/banner_1.png"),
+            (2, 200, 0.04, "../assets/bgs/bgs3.png", "../assets/banners/banner_2.png")
         ]
+        self.levels = [Level(*data) for data in level_data]
 
     def load_assets(self):
         self.load_background()
@@ -41,10 +43,10 @@ class DuckHuntGame:
         self.load_gameover_menu_images()
         self.load_gun_assets()
         self.banner_image()
-        self.gameover_score_font = pygame.font.SysFont("../assets/fonts/AA_Magnum.ttf", 36)
+        self.gameover_score_font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 36)
 
     def load_gun_assets(self):
-        self.gun = Gun("../assets/gun/Gun.PNG", (450, 600))
+        self.gun = Gun("../assets/gun/Gun.png", (450, 600))
 
     def update_gun(self):
         self.gun.update()
@@ -88,7 +90,7 @@ class DuckHuntGame:
         self.resume_rect = self.resume_image.get_rect(center=(700, 450))
 
     def load_start_menu_images(self):
-        start_menu_background = pygame.image.load("../assets/menu/start_menu/background.PNG").convert_alpha()
+        start_menu_background = pygame.image.load("../assets/menu/start_menu/background.png").convert_alpha()
         self.start_menu_background = pygame.transform.scale(start_menu_background, (self.WIDTH, self.HEIGHT))
         self.free_play = pygame.image.load("../assets/menu/start_menu/free_play.png").convert_alpha()
         self.accuracy = pygame.image.load("../assets/menu/start_menu/accuracy.png").convert_alpha()
@@ -100,7 +102,7 @@ class DuckHuntGame:
         self.reset_scores_rect = self.reset_scores.get_rect(center=(700, 600))
 
     def load_gameover_menu_images(self):
-        gameover_menu_background = pygame.image.load("../assets/menu/gameover_menu/background.PNG").convert_alpha()
+        gameover_menu_background = pygame.image.load("../assets/menu/gameover_menu/background.png").convert_alpha()
         self.gameover_menu_background = pygame.transform.scale(gameover_menu_background, (self.WIDTH, self.HEIGHT))
         self.gameover_main_menu = pygame.image.load("../assets/menu/gameover_menu/main_menu.png").convert_alpha()
         self.gameover_exit = pygame.image.load("../assets/menu/gameover_menu/exit.png").convert_alpha()
@@ -141,7 +143,8 @@ class DuckHuntGame:
                 if event.key == pygame.K_p:
                     self.toggle_pause()
 
-    def check_button_clicked(self, button_rect, button_image, mouse_x, mouse_y):
+    @staticmethod
+    def check_button_clicked(button_rect, button_image, mouse_x, mouse_y):
         if button_rect.collidepoint(mouse_x, mouse_y):
             relative_x = mouse_x - button_rect.left
             relative_y = mouse_y - button_rect.top
@@ -225,12 +228,12 @@ class DuckHuntGame:
         self.display.display_image(self.background_image, (0, 0))
         if self.paused:
             self.display.display_paused_menu(self.paused_background_image, self.main_menu_image,
-                                                      self.resume_image, self.main_menu_rect, self.resume_rect)
+                                             self.resume_image, self.main_menu_rect, self.resume_rect)
         else:
             if self.levels[self.current_level].banner_image is not None:
                 self.shot_score()
                 if self.countdown_mode:
-                    font = pygame.font.SysFont("../assets/fonts/AA_Magnum.ttf", 30)
+                    font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 30)
                     countdown_text = font.render(f'Time: {int(self.countdown_timer)}', True, (0, 0, 0))
                     countdown_rect = countdown_text.get_rect(midright=(570, 700))
                     self.display.display_image(countdown_text, countdown_rect)
@@ -250,7 +253,7 @@ class DuckHuntGame:
         banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
         banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
         self.screen.blit(banner, banner_rect)
-        font = pygame.font.SysFont("../assets/fonts/AA_Magnum.ttf", 30)
+        font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 30)
         shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
         score_text = font.render(f'Score: {self.score}', True, (0, 0, 0))
         self.screen.blit(shot_text, (350, 680))
@@ -297,9 +300,10 @@ class DuckHuntGame:
         # Calculate score text based on the game state
         score_text = self.gameover_score_font.render(f'Your Score: {self.score}', True, (255, 255, 255))
         while self.in_gameover_menu:
-            self.display.display_gameover_menu(self.gameover_menu_background, self.gameover_main_menu,
-                                                        self.gameover_exit, self.gameover_main_menu_rect,
-                                                        self.gameover_exit_rect, score_text)
+            self.display.display_gameover_menu(
+                self.gameover_menu_background, self.gameover_main_menu,
+                self.gameover_exit, self.gameover_main_menu_rect,
+                self.gameover_exit_rect, score_text)
             self.handle_gameover_menu_events()
             pygame.display.flip()
 
@@ -308,8 +312,10 @@ class DuckHuntGame:
         while self.in_main_menu:
             self.timer.tick(self.fps)
             self.handle_main_menu_events()
-            self.display.display_start_menu(self.start_menu_background, self.free_play, self.accuracy,
-                                                     self.countdown, self.reset_scores, self.free_play_rect,
-                                                     self.accuracy_rect, self.countdown_rect,
-                                                     self.reset_scores_rect)
+            self.display.display_start_menu(
+                self.start_menu_background, self.free_play, self.accuracy,
+                self.countdown, self.reset_scores, self.free_play_rect,
+                self.accuracy_rect, self.countdown_rect,
+                self.reset_scores_rect
+            )
             pygame.display.flip()
