@@ -29,4 +29,4 @@ class Display:
         self.screen.blit(gameover_menu_background, (0, 0))
         self.screen.blit(gameover_main_menu, gameover_main_menu_rect)
         self.screen.blit(gameover_exit, gameover_exit_rect)
-        self.screen.blit(score_text, (435, 300))
+        self.screen.blit(score_text, (350, 300))

@@ -196,6 +196,7 @@ class DuckHuntGame:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 if self.check_button_clicked(self.gameover_main_menu_rect, self.gameover_main_menu, mouse_x, mouse_y):
                     self.in_gameover_menu = False
+                    self.restart_level()
                     self.run_main_menu()
                 elif self.check_button_clicked(self.gameover_exit_rect, self.gameover_exit, mouse_x, mouse_y):
                     pygame.quit()
@@ -224,7 +225,6 @@ class DuckHuntGame:
                 self.score += 1
 
     def update_screen(self):
-        # Modify this method to use methods from DisplayManager
         self.display.display_image(self.background_image, (0, 0))
         if self.paused:
             self.display.display_paused_menu(self.paused_background_image, self.main_menu_image,
@@ -297,7 +297,6 @@ class DuckHuntGame:
 
     def run_gameover_menu(self):
         self.in_gameover_menu = True
-        # Calculate score text based on the game state
         score_text = self.gameover_score_font.render(f'Your Score: {self.score}', True, (255, 255, 255))
         while self.in_gameover_menu:
             self.display.display_gameover_menu(
