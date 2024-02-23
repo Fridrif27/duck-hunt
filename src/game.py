@@ -15,7 +15,7 @@ class DuckHuntGame:
         self.display = Display(width, height)
         self.screen = pygame.display.set_mode([width, height])
         self.current_level = 0
-        self.in_gameover_menu = False
+        self.in_game_over_menu = False
         self.paused = False
         self.accuracy_mode = False
         self.countdown_mode = False
@@ -40,10 +40,10 @@ class DuckHuntGame:
         self.initialize_targets()
         self.load_sounds()
         self.load_paused_images()
-        self.load_gameover_menu_images()
+        self.load_game_over_menu_images()
         self.load_gun_assets()
         self.banner_image()
-        self.gameover_score_font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 36)
+        self.game_over_score_font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 36)
 
     def load_gun_assets(self):
         self.gun = Gun("../assets/gun/Gun.png", (450, 600))
@@ -101,13 +101,13 @@ class DuckHuntGame:
         self.countdown_rect = self.countdown.get_rect(center=(200, 600))
         self.reset_scores_rect = self.reset_scores.get_rect(center=(700, 600))
 
-    def load_gameover_menu_images(self):
-        gameover_menu_background = pygame.image.load("../assets/menu/gameover_menu/background.png").convert_alpha()
-        self.gameover_menu_background = pygame.transform.scale(gameover_menu_background, (self.WIDTH, self.HEIGHT))
-        self.gameover_main_menu = pygame.image.load("../assets/menu/gameover_menu/main_menu.png").convert_alpha()
-        self.gameover_exit = pygame.image.load("../assets/menu/gameover_menu/exit.png").convert_alpha()
-        self.gameover_main_menu_rect = self.gameover_main_menu.get_rect(center=(200, 450))
-        self.gameover_exit_rect = self.gameover_exit.get_rect(center=(700, 450))
+    def load_game_over_menu_images(self):
+        game_over_menu_background = pygame.image.load("../assets/menu/game_over_menu/background.png").convert_alpha()
+        self.game_over_menu_background = pygame.transform.scale(game_over_menu_background, (self.WIDTH, self.HEIGHT))
+        self.game_over_main_menu = pygame.image.load("../assets/menu/game_over_menu/main_menu.png").convert_alpha()
+        self.game_over_exit = pygame.image.load("../assets/menu/game_over_menu/exit.png").convert_alpha()
+        self.game_over_main_menu_rect = self.game_over_main_menu.get_rect(center=(200, 450))
+        self.game_over_exit_rect = self.game_over_exit.get_rect(center=(700, 450))
 
     def initialize_targets(self):
         level = self.levels[self.current_level]
@@ -187,17 +187,17 @@ class DuckHuntGame:
                 elif self.check_button_clicked(self.reset_scores_rect, self.reset_scores, mouse_x, mouse_y):
                     self.run_main_menu()
 
-    def handle_gameover_menu_events(self):
+    def handle_game_over_menu_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                if self.check_button_clicked(self.gameover_main_menu_rect, self.gameover_main_menu, mouse_x, mouse_y):
-                    self.in_gameover_menu = False
+                if self.check_button_clicked(self.game_over_main_menu_rect, self.game_over_main_menu, mouse_x, mouse_y):
+                    self.in_game_over_menu = False
                     self.run_main_menu()
-                elif self.check_button_clicked(self.gameover_exit_rect, self.gameover_exit, mouse_x, mouse_y):
+                elif self.check_button_clicked(self.game_over_exit_rect, self.game_over_exit, mouse_x, mouse_y):
                     pygame.quit()
                     quit()
 
@@ -269,7 +269,7 @@ class DuckHuntGame:
                 return True
             else:
                 print("Congratulations! You have completed all levels.")
-                self.run_gameover_menu()
+                self.run_game_over_menu()
                 return False
         return True
 
@@ -284,27 +284,27 @@ class DuckHuntGame:
                 self.update_screen()
                 if self.accuracy_mode:
                     if self.shot_count >= 15:
-                        self.run_gameover_menu()
+                        self.run_game_over_menu()
                         return
                 if self.countdown_mode:
                     self.countdown_timer -= 1 / self.fps
                     if self.countdown_timer <= 0:
-                        self.run_gameover_menu()
+                        self.run_game_over_menu()
                         return
             else:
                 self.handle_paused_events()
             run = self.check_game_status()
 
-    def run_gameover_menu(self):
-        self.in_gameover_menu = True
+    def run_game_over_menu(self):
+        self.in_game_over_menu = True
         # Calculate score text based on the game state
-        score_text = self.gameover_score_font.render(f'Your Score: {self.score}', True, (255, 255, 255))
-        while self.in_gameover_menu:
-            self.display.display_gameover_menu(
-                self.gameover_menu_background, self.gameover_main_menu,
-                self.gameover_exit, self.gameover_main_menu_rect,
-                self.gameover_exit_rect, score_text)
-            self.handle_gameover_menu_events()
+        score_text = self.game_over_score_font.render(f'Your Score: {self.score}', True, (255, 255, 255))
+        while self.in_game_over_menu:
+            self.display.display_game_over_menu(
+                self.game_over_menu_background, self.game_over_main_menu,
+                self.game_over_exit, self.game_over_main_menu_rect,
+                self.game_over_exit_rect, score_text)
+            self.handle_game_over_menu_events()
             pygame.display.flip()
 
     def run_main_menu(self):
