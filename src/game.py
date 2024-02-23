@@ -162,6 +162,7 @@ class DuckHuntGame:
                 if self.check_button_clicked(self.main_menu_rect, self.main_menu_image, mouse_x, mouse_y):
                     self.paused = False
                     self.in_main_menu = True
+                    self.restart_level()
                     self.run_main_menu()
                 elif self.check_button_clicked(self.resume_rect, self.resume_image, mouse_x, mouse_y):
                     self.toggle_pause()
