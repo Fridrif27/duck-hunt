@@ -297,6 +297,8 @@ class DuckHuntGame:
             run = self.check_game_status()
 
     def run_game_over_menu(self):
+        self.accuracy_mode = False
+        self.countdown_mode = False
         self.in_game_over_menu = True
         score_text = self.game_over_score_font.render(f'Your Score: {self.score}', True, (255, 255, 255))
         while self.in_game_over_menu:
