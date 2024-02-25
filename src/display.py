@@ -6,7 +6,7 @@ class Display:
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode([width, height])
-        self.game_over_score_font = pygame.font.Font("../assets/fonts/AA_Magnum.ttf", 36)
+        self.game_over_score_font = pygame.font.Font("assets/fonts/AA_Magnum.ttf", 36)
 
     def display_image(self, image, rect):
         self.screen.blit(image, rect)

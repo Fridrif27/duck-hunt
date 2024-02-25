@@ -1,0 +1,1 @@
+handle_paused_events
