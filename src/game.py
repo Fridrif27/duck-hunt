@@ -1,10 +1,13 @@
+"""
+This module implements the DuckHuntGame class for the Duck Hunt game.
+"""
+
 import pygame
 from level import Level
 from target import Target
 from gun import Gun
 from display import Display
 from menu_handler import MenuHandler
-
 
 class DuckHuntGame:
     def __init__(self, width, height):
@@ -13,6 +16,36 @@ class DuckHuntGame:
         self.timer = pygame.time.Clock()
         self.WIDTH = width
         self.HEIGHT = height
+        self.levels = []
+        self.bird_images = []
+        self.game_over_score_font = pygame.font.Font("assets/fonts/AA_Magnum.ttf", 36)
+        self.sounds = {}
+        self.background_image =[]
+        self.pause_button = None
+        self.restart_button = None
+        self.pause_button_rect = None
+        self.restart_button_rect = None
+        self.paused_background_image = None
+        self.main_menu_image = None
+        self.resume_image = None
+        self.main_menu_rect = None
+        self.resume_rect = None
+        self.start_menu_background = None
+        self.free_play = None
+        self.accuracy = None
+        self.countdown = None
+        self.reset_scores = None
+        self.free_play_rect = None
+        self.accuracy_rect = None
+        self.countdown_rect = None
+        self.reset_scores_rect = None
+        self.game_over_menu_background = None
+        self.game_over_main_menu = None
+        self.game_over_exit = None
+        self.game_over_main_menu_rect = None
+        self.game_over_exit_rect = None
+        self.targets = []
+        self.in_main_menu = True
         self.display = Display(width, height)
         self.screen = pygame.display.set_mode([width, height])
         self.current_level = 0
@@ -24,8 +57,20 @@ class DuckHuntGame:
         self.shot_count = 0
         self.countdown_timer = 15
         self.menu_handler = MenuHandler(self)
-        self.menu_handler.load_assets()
+        self.load_assets()
         self.load_gun_assets()
+
+    def load_assets(self):
+        self.load_background()
+        self.load_start_menu_images()
+        self.load_levels()
+        self.load_images()
+        self.initialize_targets()
+        self.load_sounds()
+        self.load_game_over_menu_images()
+        self.load_gun_assets()
+        self.banner_image()
+        self.load_paused_images()
 
     def load_levels(self):
         level_data = [
