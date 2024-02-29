@@ -3,20 +3,7 @@ import pygame
 class MenuHandler:
     def __init__(self, game):
         self.game = game
-        self.load_assets()
-
-    def load_assets(self):
-        self.game.load_background()
-        self.game.load_start_menu_images()
-        self.game.load_levels()
-        self.game.load_images()
-        self.game.initialize_targets()
-        self.game.load_sounds()
-        self.game.load_paused_images()
-        self.game.load_game_over_menu_images()
-        self.game.load_gun_assets()
-        self.game.banner_image()
-        self.game.game_over_score_font = pygame.font.Font("assets/fonts/AA_Magnum.ttf", 36)
+        self.game.load_assets()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -87,9 +74,10 @@ class MenuHandler:
                     quit()
 
     def check_button_clicked(self, button_rect, button_image, mouse_x, mouse_y):
-        if button_rect.collidepoint(mouse_x, mouse_y):
-            relative_x = mouse_x - button_rect.left
-            relative_y = mouse_y - button_rect.top
-            pixel = button_image.get_at((relative_x, relative_y))
-            return pixel[3] > 0
+        if button_rect:
+            if button_rect.collidepoint(mouse_x, mouse_y):
+                relative_x = mouse_x - button_rect.left
+                relative_y = mouse_y - button_rect.top
+                pixel = button_image.get_at((relative_x, relative_y))
+                return pixel[3] > 0
         return False
