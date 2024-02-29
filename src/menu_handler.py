@@ -1,11 +1,30 @@
+"""
+This module implements the MenuHandler class for the Duck Hunt game.
+"""
 import pygame
 
+
 class MenuHandler:
+    """Class to handle different types of events in the game menu."""
+
     def __init__(self, game):
+        """
+        Initialize MenuHandler with a reference to the main game instance.
+        
+        Args:
+            game: The main game instance.
+        """
         self.game = game
         self.game.load_assets()
 
     def handle_events(self):
+        """
+        Handle events during gameplay.
+        
+        - Quit the game.
+        - Pause or restart the game.
+        - Shoot targets.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -23,6 +42,13 @@ class MenuHandler:
                     self.game.toggle_pause()
 
     def handle_paused_events(self):
+        """
+        Handle events when the game is paused.
+        
+        - Quit the game.
+        - Return to the main menu.
+        - Resume the game.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -41,6 +67,14 @@ class MenuHandler:
                     self.game.toggle_pause()
 
     def handle_main_menu_events(self):
+        """
+        Handle events when in the main menu.
+        
+        - Quit the game.
+        - Start a new game.
+        - Choose different game modes.
+        - Reset scores.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -59,6 +93,12 @@ class MenuHandler:
                     self.game.run_main_menu()
 
     def handle_game_over_menu_events(self):
+        """
+        Handle events when in the game over menu.
+        
+        - Quit the game.
+        - Return to the main menu.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -74,6 +114,18 @@ class MenuHandler:
                     quit()
 
     def check_button_clicked(self, button_rect, button_image, mouse_x, mouse_y):
+        """
+        Check if a button is clicked based on its rectangle area, image, and mouse coordinates.
+        
+        Args:
+            button_rect: The rectangle area of the button.
+            button_image: The image of the button.
+            mouse_x: The x-coordinate of the mouse position.
+            mouse_y: The y-coordinate of the mouse position.
+        
+        Returns:
+            bool: True if the button is clicked, False otherwise.
+        """
         if button_rect:
             if button_rect.collidepoint(mouse_x, mouse_y):
                 relative_x = mouse_x - button_rect.left
