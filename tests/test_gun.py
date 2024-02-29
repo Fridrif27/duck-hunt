@@ -1,9 +1,6 @@
 import pygame
-import math
 import pytest
 from src.gun import Gun
-
-from unittest.mock import patch, MagicMock
 
 pygame.display.init()
 
