@@ -1,5 +1,6 @@
 import pygame
 import pytest
+import math
 from src.gun import Gun
 
 pygame.display.init()
