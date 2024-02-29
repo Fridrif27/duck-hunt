@@ -11,7 +11,7 @@ pygame.display.init()
 def gun_instance():
     pygame.display.set_mode((800, 600))
     initial_position = (400, 300)
-    return Gun("C://Github/duck-hunt/assets/gun/Gun.png", initial_position)
+    return Gun("assets/gun/Gun.png", initial_position)
 
 
 # Define test cases for Gun class
