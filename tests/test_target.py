@@ -1,45 +1,76 @@
+import math
+import unittest.mock
 import pytest
 from src.target import (
     Target,
-)  # Replace "your_module_name" with the actual name of the module containing the Target class
+)  # Replace 'your_module' with the actual module name where Target class is defined
 
 
 @pytest.fixture
-def target_instance():
-    # Create an instance of the Target class with some initial parameters for testing
+def sample_target():
+    bird_images = [
+        "../assets/targets/bird1",
+        "../assets/targets/bird2",
+        "../assets/targets/bird3",
+    ]
     return Target(
-        x=100,
-        y=200,
-        radius=20,
-        speed=2,
-        amplitude_y=50,
-        frequency_y=0.1,
-        bird_images=[],
-        screen_width=800,
+        x=0,
+        y=0,
+        radius=1,
+        speed=1,
+        amplitude_y=1,
+        frequency_y=1,
+        bird_images=bird_images,
+        screen_width=100,
     )
 
 
-def test_move(target_instance):
-    # Check if the move function updates the position correctly
-    initial_x = target_instance.x
-    initial_y = target_instance.y
-    target_instance.move()
-    assert target_instance.x == initial_x + target_instance.speed
-    assert target_instance.y != initial_y  # The y-coordinate should change
+def test_initialization(sample_target):
+    assert sample_target.x == 0
+    assert sample_target.y == 0
+    assert sample_target.radius == 1
+    assert sample_target.speed == 1
+    assert sample_target.amplitude_y == 1
+    assert sample_target.frequency_y == 1
+    assert sample_target.initial_y == 0
+    assert sample_target.bird_images == [
+        "../assets/targets/bird1",
+        "../assets/targets/bird2",
+        "../assets/targets/bird3",
+    ]
+    assert sample_target.screen_width == 100
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
-def test_check_boundary(target_instance):
-    # Check if the check_boundary function works correctly
-    # Move the target to a position outside the screen to trigger boundary conditions
-    target_instance.x = target_instance.screen_width + target_instance.radius + 1
-    target_instance.check_boundary()
-    assert (
-        target_instance.x == -target_instance.radius
-    )  # Should be wrapped to the left side of the screen
+def test_move_updates_position(sample_target, monkeypatch):
+    with unittest.mock.patch("random.choice", return_value="bird_image"):
+        sample_target.move()
+    assert sample_target.x == 1
+    assert sample_target.y != 0
 
-    target_instance.x = -target_instance.radius - 1
-    target_instance.check_boundary()
-    assert (
-        target_instance.x == target_instance.screen_width + target_instance.radius
-    )  # Should be wrapped to the right side of the screen
+
+def test_check_boundary_resets_position(sample_target):
+    sample_target.x = sample_target.screen_width + sample_target.radius + 1
+    sample_target.check_boundary()
+    assert sample_target.x == -sample_target.radius
+
+
+def test_check_boundary_does_nothing_within_boundary(sample_target):
+    sample_target.x = 10
+    sample_target.check_boundary()
+    assert sample_target.x == 10
+
+
+def test_move_check_boundary_integration(sample_target, monkeypatch):
+    sample_target.x = sample_target.screen_width + sample_target.radius + 1
+    with unittest.mock.patch("random.choice", return_value="bird_image"):
+        sample_target.move()
+    assert sample_target.x == -sample_target.radius
+    assert sample_target.y != 0
+
+
+def test_move_does_not_reset_position_within_boundary(sample_target, monkeypatch):
+    sample_target.x = 10
+    with unittest.mock.patch("random.choice", return_value="bird_image"):
+        sample_target.move()
+    assert sample_target.x == 11
+    assert sample_target.y != 0
