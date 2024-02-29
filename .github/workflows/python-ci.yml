@@ -45,4 +45,4 @@ jobs:
         pytest
     - name: Analyze code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --suggestion-mode=yes $(git ls-files '*.py')
