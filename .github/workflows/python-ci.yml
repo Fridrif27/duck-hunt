@@ -45,5 +45,5 @@ jobs:
         pytest
     - name: Analyze code with pylint
       run: |
-        pylint -S $(git ls-files '*.py')
+        pylint $(git ls-files '*.py')
 
