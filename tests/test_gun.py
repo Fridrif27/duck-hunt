@@ -3,8 +3,6 @@ import pytest
 import math
 from src.gun import Gun
 
-from pytest_mock import mocker
-
 pygame.display.init()
 
 
