@@ -1,4 +1,4 @@
-repose
+repos:
  - repose: local
    hooks:
      - id: flake8
@@ -6,4 +6,4 @@ repose
        entry: flake8 --config .flake8 .
        language: system
        types: [ python ]
-       pass filenames: false
+       pass_filenames: false
