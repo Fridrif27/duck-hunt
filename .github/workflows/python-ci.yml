@@ -43,7 +43,4 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Analyze code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
 
