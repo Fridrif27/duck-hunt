@@ -1,3 +1,7 @@
+# pylint: disable=too-many-arguments
+# pylint: disable=line-too-long
+# pylint: disable=E0401
+
 """
 This module implements the Display class for the Duck Hunt game.
 """

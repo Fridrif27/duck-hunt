@@ -1,3 +1,8 @@
+# pylint: disable=line-too-long
+# pylint: disable=no-member
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=R0904
+# pylint: disable=E0401
 """
 This module implements the DuckHuntGame class for the Duck Hunt game.
 """
@@ -26,8 +31,8 @@ class DuckHuntGame:
         pygame.init()
         self.fps = 60
         self.timer = pygame.time.Clock()
-        self.WIDTH = width
-        self.HEIGHT = height
+        self.width = width
+        self.height = height
         self.levels = []
         self.bird_images = []
         self.game_over_score_font = pygame.font.Font("assets/fonts/AA_Magnum.ttf", 36)
@@ -167,9 +172,14 @@ class DuckHuntGame:
             None
         """
         sound_files = ["shot.mp3", "bird1.mp3", "bird2.mp3", "bird3.mp3", "bird4.mp3"]
-        self.sounds = {file.split(".")[0]: pygame.mixer.Sound(f"assets/sounds/{file}") for file in sound_files}
+        self.sounds = {
+            file.split(".", maxsplit=1)[0]: pygame.mixer.Sound(
+                f"../../example-game/assets/sounds/{file}"
+            )
+            for file in sound_files
+        }
         self.sounds["shot"].set_volume(0.08)
-        pygame.mixer.music.load("assets/sounds/background.mp3")
+        pygame.mixer.music.load("../../example-game/assets/sounds/background.mp3")
         pygame.mixer.music.play(-1)
 
     def load_background(self):
@@ -401,7 +411,7 @@ class DuckHuntGame:
             None
         """
         banner = pygame.image.load(self.levels[self.current_level].banner_image).convert_alpha()
-        banner_rect = banner.get_rect(midbottom=(self.WIDTH // 2, self.HEIGHT))
+        banner_rect = banner.get_rect(midbottom=(self.width // 2, self.height))
         self.screen.blit(banner, banner_rect)
         font = pygame.font.Font("assets/fonts/AA_Magnum.ttf", 30)
         shot_text = font.render(f'Shot: {self.shot_count}', True, (0, 0, 0))
@@ -427,10 +437,9 @@ class DuckHuntGame:
                 self.initialize_targets()
                 print("Level completed! Proceeding to the next level...")
                 return True
-            else:
-                print("Congratulations! You have completed all levels.")
-                self.run_game_over_menu()
-                return False
+            print("Congratulations! You have completed all levels.")
+            self.run_game_over_menu()
+            return False
         return True
 
     def run_game(self):

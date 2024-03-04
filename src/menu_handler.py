@@ -1,3 +1,8 @@
+# pylint: disable=R1722
+# pylint: disable=no-member
+# pylint: disable=E0401
+# pylint: disable=C0301
+
 """
 This module implements the MenuHandler class for the Duck Hunt game.
 """

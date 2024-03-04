@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 
 """
 Main module for starting the Duck Hunt game.

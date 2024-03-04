@@ -1,8 +1,29 @@
+# pylint: disable=R0903
+# pylint: disable=E0401
+
+"""
+This module provides mathematical functions and constants as well as
+a library for creating games and multimedia applications.
+"""
 import math
 import pygame
 
 
 class Gun:
+    """
+        This class represents a gun in a game.
+
+        The Gun class provides functionality to handle the appearance and behavior of a gun
+        within a game. It allows for loading an image of the gun, updating its rotation based
+        on the mouse position, and rendering it on the screen.
+
+        Attributes:
+            image: A pygame Surface object representing the image of the gun.
+            rect: A pygame Rect object representing the position and dimensions of the gun's image.
+            rotated_image: A pygame Surface object representing the rotated image of the gun.
+            rotated_rect: A pygame Rect object representing the position
+            and dimensions of the rotated gun image.
+        """
     def __init__(self, image_path, initial_position):
         """
         Initialize the Gun object with its image and initial position.

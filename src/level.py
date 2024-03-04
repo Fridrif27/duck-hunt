@@ -1,3 +1,5 @@
+# pylint: disable=R0913
+# pylint: disable=R0903
 """
 This module implements the Level class for the Duck Hunt game.
 """

@@ -1,3 +1,7 @@
+# pylint: disable=R0902
+# pylint: disable=R0913
+# pylint: disable=C0301
+
 """
 This module implements the Target class for the Duck Hunt game.
 """
