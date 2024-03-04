@@ -174,12 +174,12 @@ class DuckHuntGame:
         sound_files = ["shot.mp3", "bird1.mp3", "bird2.mp3", "bird3.mp3", "bird4.mp3"]
         self.sounds = {
             file.split(".", maxsplit=1)[0]: pygame.mixer.Sound(
-                f"../../example-game/assets/sounds/{file}"
+                f"assets/sounds/{file}"
             )
             for file in sound_files
         }
         self.sounds["shot"].set_volume(0.08)
-        pygame.mixer.music.load("../../example-game/assets/sounds/background.mp3")
+        pygame.mixer.music.load("assets/sounds/background.mp3")
         pygame.mixer.music.play(-1)
 
     def load_background(self):
