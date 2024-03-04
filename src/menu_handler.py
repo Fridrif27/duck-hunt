@@ -131,10 +131,9 @@ class MenuHandler:
         Returns:
             bool: True if the button is clicked, False otherwise.
         """
-        if button_rect:
-            if button_rect.collidepoint(mouse_x, mouse_y):
-                relative_x = mouse_x - button_rect.left
-                relative_y = mouse_y - button_rect.top
-                pixel = button_image.get_at((relative_x, relative_y))
-                return pixel[3] > 0
+        if button_rect and button_rect.collidepoint(mouse_x, mouse_y):
+            relative_x = mouse_x - button_rect.left
+            relative_y = mouse_y - button_rect.top
+            pixel = button_image.get_at((relative_x, relative_y))
+            return pixel[3] > 0
         return False
