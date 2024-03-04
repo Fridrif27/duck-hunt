@@ -197,7 +197,7 @@ class DuckHuntGame:
         current_level_background = f"assets/bgs/bgs{self.current_level + 1}.png"
         self.background_image = pygame.transform.scale(
             pygame.image.load(current_level_background).convert(),
-            (self.WIDTH, self.HEIGHT)
+            (self.width, self.height)
         )
 
     def banner_image(self):
@@ -226,7 +226,7 @@ class DuckHuntGame:
             None
         """
         paused_background_image = pygame.image.load("assets/menu/pause_menu/background.png").convert_alpha()
-        self.paused_background_image = pygame.transform.scale(paused_background_image, (self.WIDTH, self.HEIGHT))
+        self.paused_background_image = pygame.transform.scale(paused_background_image, (self.width, self.height))
         self.main_menu_image = pygame.image.load("assets/menu/pause_menu/Main_menu.png").convert_alpha()
         self.resume_image = pygame.image.load("assets/menu/pause_menu/Resume.png").convert_alpha()
 
@@ -244,7 +244,7 @@ class DuckHuntGame:
             None
         """
         start_menu_background = pygame.image.load("assets/menu/start_menu/background.png").convert_alpha()
-        self.start_menu_background = pygame.transform.scale(start_menu_background, (self.WIDTH, self.HEIGHT))
+        self.start_menu_background = pygame.transform.scale(start_menu_background, (self.width, self.height))
         self.free_play = pygame.image.load("assets/menu/start_menu/free_play.png").convert_alpha()
         self.accuracy = pygame.image.load("assets/menu/start_menu/accuracy.png").convert_alpha()
         self.countdown = pygame.image.load("assets/menu/start_menu/countdown.png").convert_alpha()
@@ -265,7 +265,7 @@ class DuckHuntGame:
             None
         """
         game_over_menu_background = pygame.image.load("assets/menu/game_over_menu/background.png").convert_alpha()
-        self.game_over_menu_background = pygame.transform.scale(game_over_menu_background, (self.WIDTH, self.HEIGHT))
+        self.game_over_menu_background = pygame.transform.scale(game_over_menu_background, (self.width, self.height))
         self.game_over_main_menu = pygame.image.load("assets/menu/game_over_menu/main_menu.png").convert_alpha()
         self.game_over_exit = pygame.image.load("assets/menu/game_over_menu/exit.png").convert_alpha()
         self.game_over_main_menu_rect = self.game_over_main_menu.get_rect(center=(200, 450))
@@ -285,7 +285,7 @@ class DuckHuntGame:
         positions = [(100, 200), (300, 400), (500, 100), (700, 300), (800, 600)]
         speeds = [1, -1, 2, -1.5, 1.5]
         self.targets = [
-            Target(pos[0], pos[1], 20, speed, level.amplitude_y, level.frequency_y, self.bird_images, self.WIDTH) for
+            Target(pos[0], pos[1], 20, speed, level.amplitude_y, level.frequency_y, self.bird_images, self.width) for
             pos, speed in zip(positions, speeds)]
         self.load_background()
 
