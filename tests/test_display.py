@@ -9,7 +9,7 @@ import pytest
 import pygame
 from src.display import (
     Display,
-)  # Assuming your Display class is in a file named display.py
+)  # Display class is in a file named display.py
 
 
 # Fixture to initialize a Display object
@@ -45,11 +45,10 @@ def test_display_image(display):
                 This test requires a mock test image and rectangle coordinates.
                 Add assertions to verify that the image was displayed correctly.
             """
-    # Assuming you have some test images
+    # We have some test images
     test_image = pygame.Surface((100, 100))  # Mock test image
     rect = (0, 0, 100, 100)  # Mock rect
     display.display_image(test_image, rect)
-    # Add assertions here to verify that the image was displayed correctly
 
 
 # Test display_paused_menu method
@@ -68,7 +67,7 @@ def test_display_paused_menu(display):
                 This test requires mock images and rectangles for the paused menu components.
                 Add assertions to verify that the paused menu is displayed correctly.
             """
-    # Assuming you have mock images and rects for the paused menu
+    # We have mock images and rects for the paused menu
     paused_background_image = pygame.Surface((800, 600))  # Mock background image
     main_menu_image = pygame.Surface((100, 50))  # Mock main menu button image
     resume_image = pygame.Surface((100, 50))  # Mock resume button image

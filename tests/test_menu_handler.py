@@ -24,7 +24,7 @@ def game_instance():
             """
     game = Mock()
     game.load_assets.return_value = None
-    return game  # Replace with actual initialization logic
+    return game
 
 
 @pytest.fixture
